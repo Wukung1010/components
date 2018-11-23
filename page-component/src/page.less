@@ -1,0 +1,72 @@
+@primary-color: #2d8cf0;
+@font-color: #666;
+@border-color: #dcdee2;
+@border-radius: 4px;
+
+.jtable-page-ul {
+    display: block;
+    clear: both;
+    overflow: hidden;
+    // visibility: hidden;
+    li {
+        margin: 0;
+        border: 0;
+        height: 24px;
+        line-height: normal;
+        font-size: 18px;
+        display: inline-block;
+        
+        a {
+            color: @font-color;
+            font-size: 14px;
+            
+            background: 0 0;
+            text-decoration: none;
+            outline: 0;
+            cursor: not-allowed;
+            transition: color .2s ease;
+            
+            &.can-click:hover {
+                color: @primary-color;
+            }
+            &.can-click {
+                cursor: pointer;
+            }
+            &.jtable-page-pre::before {
+                content: '<'
+            }
+            &.jtable-page-next::after {
+                content: '>'
+            }
+        }
+    }
+    div {
+        display: inline-block;
+        margin-right: 8px;
+        vertical-align: middle;
+
+        input {
+            // width: 30px;
+            height: 24px;
+            margin: 0 8px;
+            padding: 5px 8px;
+            text-align: center;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: @font-color;
+            outline: 0;
+            border: 1px solid @border-color;
+            border-radius: @border-radius;
+            transition: border-color .2s ease-in-out;
+
+            &:hover, &:focus {
+                border-color: @primary-color;
+            }
+        }
+
+        span {
+            padding: 0 8px 0 2px;
+            color: @font-color;
+        }
+    }
+}

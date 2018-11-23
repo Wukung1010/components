@@ -1,0 +1,18 @@
+{
+  "name": "page-component",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/page.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "sun.xianfeng",
+  "license": "ISC",
+  "devDependencies": {
+    "less": "^3.8.1",
+    "less-loader": "^4.1.0",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2"
+  }
+}
