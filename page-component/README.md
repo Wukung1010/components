@@ -3,7 +3,7 @@
 ## 使用方法
 
 ```javascript
-new Page(option);
+new Page(el, option);
 ```
 
 传入配置对象
