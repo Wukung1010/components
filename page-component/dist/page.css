@@ -2,6 +2,8 @@
   display: block;
   clear: both;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 .jtable-page-ul li {
   margin: 0;
