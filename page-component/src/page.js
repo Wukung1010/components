@@ -118,19 +118,14 @@ PageComponent.prototype = {
             this.refs.jtable_input.value = this._option.currentPage = nextPage;
         }
 
-        if (
-            this._option.beforePageChange &&
-            !this._option.beforePageChange(nextPage)
-        ) {
+        if (this._option.beforePageChange && !this._option.beforePageChange(nextPage)) {
             return;
         }
         this.currentPageChange(nextPage);
     },
     currentPageChange(nextPage) {
-        if (nextPage !== this._option.currentPage) {
-            if (this._option.pageChange) {
-                this._option.pageChange(nextPage);
-            }
+        if (this._option.pageChange) {
+            this._option.pageChange(nextPage);
         }
         this.checkBoundary();
     },
