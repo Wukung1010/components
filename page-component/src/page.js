@@ -7,10 +7,7 @@ function PageComponent(el, option) {
     this._pageEL = this._render(
         "ul",
         {
-            class: "jtable-page-ul",
-            style: {
-                "user-select": "none"
-            }
+            class: "jtable-page-ul"
         },
         [
             this._render("li", {}, [
@@ -25,7 +22,7 @@ function PageComponent(el, option) {
             ]),
             this._render("div", {}, [
                 this._render("input", {
-                    type: "text",
+                    type: "number",
                     ref: "jtable_input",
                     style: {
                         width: this.getInputWidth()
@@ -58,16 +55,19 @@ function PageComponent(el, option) {
     this.refs.pre_btn.addEventListener("click", e => {
         this.goPre(e);
     });
-    this.refs.jtable_input.addEventListener("input", e => {
-        console.log(e);
-    });
-    this.refs.jtable_input.addEventListener("change", e => {
-        console.log(e);
+    this.refs.jtable_input.addEventListener("blur", e => {
+        let next = null;
+        try{
+            next = parseInt(this.refs.jtable_input.value);
+        }catch(e){
+            return ;
+        }
+        if(next !== this._option.currentPage) {
+            this._go(e, next);
+        }
     });
 
-    return {
-
-    };
+    return {};
 }
 
 function render(name, option, son) {
@@ -108,28 +108,28 @@ PageComponent.prototype = {
     goNext(e) {
         this._go(e, this._option.currentPage + 1);
     },
-    _go(e, change) {
+    _go(e, nextPage) {
         e.preventDefault();
-        if (!this.checkPageIndex(change)) {
+        if(this.refs.jtable_input.value == nextPage && this._option.currentPage == nextPage) return;
+        if (!this.checkPageIndex(nextPage)) {
+            this.refs.jtable_input.value = this._option.currentPage;
             return;
+        }else {
+            this.refs.jtable_input.value = this._option.currentPage = nextPage;
         }
+
         if (
             this._option.beforePageChange &&
-            !this._option.beforePageChange(change)
+            !this._option.beforePageChange(nextPage)
         ) {
             return;
         }
-        this.goThisPage(change);
+        this.currentPageChange(nextPage);
     },
-    goThisPage(index) {
-        this._option.currentPage = index;
-        this.currentPageChange();
-    },
-    currentPageChange() {
-        if (this.refs.jtable_input.value !== this._option.currentPage) {
-            this.refs.jtable_input.value = this._option.currentPage;
+    currentPageChange(nextPage) {
+        if (nextPage !== this._option.currentPage) {
             if (this._option.pageChange) {
-                this._option.pageChange(this.refs.jtable_input.value);
+                this._option.pageChange(nextPage);
             }
         }
         this.checkBoundary();

@@ -4,6 +4,8 @@
   overflow: hidden;
   padding: 0;
   margin: 0;
+  user-select: none;
+  -moz-user-select: none;
 }
 .jtable-page-ul li {
   margin: 0;
@@ -51,10 +53,15 @@
   border: 1px solid #dcdee2;
   border-radius: 4px;
   transition: border-color 0.2s ease-in-out;
+  -moz-appearance: textfield;
 }
 .jtable-page-ul div input:hover,
 .jtable-page-ul div input:focus {
   border-color: #2d8cf0;
+}
+.jtable-page-ul div input::-webkit-inner-spin-button,
+.jtable-page-ul div input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
 }
 .jtable-page-ul div span {
   padding: 0 8px 0 2px;
