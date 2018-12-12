@@ -1,6 +1,8 @@
 function PageComponent(el, option) {
     this._rootEl = el;
     this._option = option;
+    this._currentPage = option.currentPage;
+    this._totalPage = option.totalPage;
     this._canClick = "can-click";
     this.refs = {};
     this._render = render.bind(this);
@@ -23,14 +25,16 @@ function PageComponent(el, option) {
             this._render("div", {}, [
                 this._render("input", {
                     type: "number",
-                    ref: "jtable_input",
+                    ref: "pager_input",
                     style: {
                         width: this.getInputWidth()
                     },
-                    value: this._option.currentPage
+                    value: this._currentPage
                 }),
                 this._render("span", {}, "/"),
-                this._render("span", {}, this._option.totalPage)
+                this._render("span", {
+                    ref: 'pager_span'
+                }, this._totalPage)
             ]),
             this._render("li", {}, [
                 this._render(
@@ -55,19 +59,19 @@ function PageComponent(el, option) {
     this.refs.pre_btn.addEventListener("click", e => {
         this.goPre(e);
     });
-    this.refs.jtable_input.addEventListener("blur", e => {
+    this.refs.pager_input.addEventListener("blur", e => {
         let next = null;
         try{
-            next = parseInt(this.refs.jtable_input.value);
+            next = parseInt(this.refs.pager_input.value);
         }catch(e){
             return ;
         }
-        if(next !== this._option.currentPage) {
+        if(next !== this._currentPage) {
             this._go(e, next);
         }
     });
 
-    return {};
+    return {reset: this.reset.bind(this)};
 }
 
 function render(name, option, son) {
@@ -103,19 +107,19 @@ function render(name, option, son) {
  */
 PageComponent.prototype = {
     goPre(e) {
-        this._go(e, this._option.currentPage - 1);
+        this._go(e, this._currentPage - 1);
     },
     goNext(e) {
-        this._go(e, this._option.currentPage + 1);
+        this._go(e, this._currentPage + 1);
     },
     _go(e, nextPage) {
         e.preventDefault();
-        if(this.refs.jtable_input.value == nextPage && this._option.currentPage == nextPage) return;
+        if(this.refs.pager_input.value == nextPage && this._currentPage == nextPage) return;
         if (!this.checkPageIndex(nextPage)) {
-            this.refs.jtable_input.value = this._option.currentPage;
+            this.refs.pager_input.value = this._currentPage;
             return;
         }else {
-            this.refs.jtable_input.value = this._option.currentPage = nextPage;
+            this.refs.pager_input.value = this._currentPage = nextPage;
         }
 
         if (this._option.beforePageChange && !this._option.beforePageChange(nextPage)) {
@@ -130,7 +134,7 @@ PageComponent.prototype = {
         this.checkBoundary();
     },
     getInputWidth() {
-        let len = this._option.totalPage.toString().length;
+        let len = this._totalPage.toString().length;
         if (len < 2) {
             return "30px";
         } else if (len === 2) {
@@ -140,17 +144,17 @@ PageComponent.prototype = {
         }
     },
     checkPageIndex(index) {
-        if (index < 1 || index > this._option.totalPage) {
+        if (index < 1 || index > this._totalPage) {
             return false;
         }
         return true;
     },
     checkBoundary() {
-        if (this._option.currentPage === 1) {
+        if (this._currentPage === 1) {
             // 左边界
             this.refs.pre_btn.classList.remove(this._canClick);
             this.refs.next_btn.classList.add(this._canClick);
-        } else if (this._option.currentPage === this._option.totalPage) {
+        } else if (this._currentPage === this._totalPage) {
             // 右边界
             this.refs.next_btn.classList.remove(this._canClick);
             this.refs.pre_btn.classList.add(this._canClick);
@@ -158,6 +162,17 @@ PageComponent.prototype = {
             this.refs.next_btn.classList.add(this._canClick);
             this.refs.pre_btn.classList.add(this._canClick);
         }
+    },
+    reset(config) {
+        if(config) {
+            this._currentPage = config.currentPage || this._option.currentPage;
+            this._totalPage = config.totalPage || this._option.totalPage;
+            this.refs.pager_input.style.width = this.getInputWidth();
+        }else {
+            this._currentPage = this._option.currentPage;
+        }
+        this.refs.pager_input.value = this._currentPage;
+        this.refs.pager_span.innerText = this._totalPage;
     }
 };
 
