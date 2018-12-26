@@ -53,6 +53,7 @@
   border: 1px solid #dcdee2;
   border-radius: 4px;
   transition: border-color 0.2s ease-in-out;
+  font-size: 13px;
   -moz-appearance: textfield;
 }
 .jtable-page-ul div input:hover,
