@@ -153,14 +153,14 @@ PageComponent.prototype = {
         if (this._currentPage === 1) {
             // 左边界
             this.refs.pre_btn.classList.remove(this._canClick);
-            this.refs.next_btn.classList.add(this._canClick);
-        } else if (this._currentPage === this._totalPage) {
+        } else {
+            this.refs.pre_btn.classList.add(this._canClick);
+        }
+        if (this._currentPage === this._totalPage) {
             // 右边界
             this.refs.next_btn.classList.remove(this._canClick);
-            this.refs.pre_btn.classList.add(this._canClick);
         } else {
             this.refs.next_btn.classList.add(this._canClick);
-            this.refs.pre_btn.classList.add(this._canClick);
         }
     },
     reset(config) {
