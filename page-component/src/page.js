@@ -173,6 +173,8 @@ PageComponent.prototype = {
         }
         this.refs.pager_input.value = this._currentPage;
         this.refs.pager_span.innerText = this._totalPage;
+
+        this.checkBoundary();
     }
 };
 
