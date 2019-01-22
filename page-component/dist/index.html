@@ -27,6 +27,10 @@
         new Page(document.getElementById("app"), {
             currentPage: 1,
             totalPage: 12,
+            type: 'simple',
+            style: {
+                totalNumSize: '13px'
+            },
             beforePageChange(page) {
                 console.log(page);
                 return true;

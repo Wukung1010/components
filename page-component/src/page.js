@@ -3,6 +3,8 @@ function PageComponent(el, option) {
     this._option = option;
     this._currentPage = option.currentPage;
     this._totalPage = option.totalPage;
+    this._type = option.type || 'default';
+    this._style = option.style || {};
     this._canClick = "can-click";
     this.refs = {};
     this._render = render.bind(this);
@@ -19,7 +21,7 @@ function PageComponent(el, option) {
                         class: "jtable-page-pre",
                         ref: "pre_btn"
                     },
-                    "上一页"
+                    this._type === 'default' ?'上一页':""
                 )
             ]),
             this._render("div", {}, [
@@ -33,7 +35,10 @@ function PageComponent(el, option) {
                 }),
                 this._render("span", {}, "/"),
                 this._render("span", {
-                    ref: 'pager_span'
+                    ref: 'pager_span',
+                    style: {
+                        'font-size': this._style.totalNumSize || '16px'
+                    }
                 }, this._totalPage)
             ]),
             this._render("li", {}, [
@@ -43,7 +48,7 @@ function PageComponent(el, option) {
                         class: "jtable-page-next",
                         ref: "next_btn"
                     },
-                    "下一页"
+                    this._type === 'default' ?'下一页':""
                 )
             ])
         ]
@@ -121,11 +126,16 @@ PageComponent.prototype = {
         }else {
             this.refs.pager_input.value = this._currentPage = nextPage;
         }
-
-        if (this._option.beforePageChange && !this._option.beforePageChange(nextPage)) {
-            return;
+        
+        let beforeChange = this._option.beforePageChange || (() => true)
+        if (!(beforeChange instanceof Promise)) {
+            beforeChange = Promise.resolve(beforeChange())
         }
-        this.currentPageChange(nextPage);
+        beforeChange.then(result => {
+            if (result) {
+                this.currentPageChange(nextPage);
+            }
+        })
     },
     currentPageChange(nextPage) {
         if (this._option.pageChange) {
