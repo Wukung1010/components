@@ -9,7 +9,6 @@ less.render(fs.readFileSync(path.join(__dirname, "src/page.less")).toString('utf
 
 module.exports = {
     entry: "./src/page.js",
-    devtool: 'eval-source-map',
     output: {
         path: path.join(__dirname, "dist"),
         filename: "page.js",
