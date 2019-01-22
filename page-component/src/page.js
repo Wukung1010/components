@@ -123,13 +123,14 @@ PageComponent.prototype = {
         if (!this.checkPageIndex(nextPage)) {
             this.refs.pager_input.value = this._currentPage;
             return;
-        }else {
-            this.refs.pager_input.value = this._currentPage = nextPage;
         }
         
         let beforeChange = this._option.beforePageChange || (() => true)
+        if (beforeChange instanceof Function) {
+            beforeChange = beforeChange()
+        }
         if (!(beforeChange instanceof Promise)) {
-            beforeChange = Promise.resolve(beforeChange())
+            beforeChange = Promise.resolve(beforeChange)
         }
         beforeChange.then(result => {
             if (result) {
@@ -141,6 +142,7 @@ PageComponent.prototype = {
         if (this._option.pageChange) {
             this._option.pageChange(nextPage);
         }
+        this.refs.pager_input.value = this._currentPage = nextPage;
         this.checkBoundary();
     },
     getInputWidth() {
