@@ -1,70 +1,66 @@
-.jtable-page-ul {
-  display: block;
-  clear: both;
+.xf-page-box {
+  display: flex;
   overflow: hidden;
   padding: 0;
   margin: 0;
   user-select: none;
   -moz-user-select: none;
 }
-.jtable-page-ul li {
-  margin: 0;
-  border: 0;
-  height: 24px;
-  line-height: normal;
-  font-size: 18px;
-  display: inline-block;
+.xf-page-box .xf-page-left,
+.xf-page-box .xf-page-right {
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
-.jtable-page-ul li a {
+.xf-page-box .xf-page-left a,
+.xf-page-box .xf-page-right a {
+  display: block;
+  width: 20px;
+  height: 20px;
+  text-align: center;
   color: #666;
   font-size: 14px;
-  background: 0 0;
-  text-decoration: none;
-  outline: 0;
   cursor: not-allowed;
-  transition: color 0.2s ease;
 }
-.jtable-page-ul li a.can-click:hover {
+.xf-page-box .xf-page-left a.can-click:hover,
+.xf-page-box .xf-page-right a.can-click:hover {
   color: #2d8cf0;
 }
-.jtable-page-ul li a.can-click {
+.xf-page-box .xf-page-left a.can-click,
+.xf-page-box .xf-page-right a.can-click {
   cursor: pointer;
 }
-.jtable-page-ul li a.jtable-page-pre::before {
+.xf-page-box .xf-page-left a.xf-page-pre::before,
+.xf-page-box .xf-page-right a.xf-page-pre::before {
   content: '<';
 }
-.jtable-page-ul li a.jtable-page-next::after {
+.xf-page-box .xf-page-left a.xf-page-next::after,
+.xf-page-box .xf-page-right a.xf-page-next::after {
   content: '>';
 }
-.jtable-page-ul div {
-  display: inline-block;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-.jtable-page-ul div input {
-  height: 24px;
-  margin: 0 8px;
-  padding: 5px 8px;
+.xf-page-box .xf-page-body {
+  flex: 1 1 auto;
   text-align: center;
-  box-sizing: border-box;
-  background-color: #fff;
+}
+.xf-page-box .xf-page-body input {
+  text-align: center;
   color: #666;
   outline: 0;
-  border: 1px solid #dcdee2;
-  border-radius: 4px;
+  border: 0px solid #dcdee2;
   transition: border-color 0.2s ease-in-out;
   font-size: 13px;
   -moz-appearance: textfield;
+  background: #ffffff00;
 }
-.jtable-page-ul div input:hover,
-.jtable-page-ul div input:focus {
+.xf-page-box .xf-page-body input:hover,
+.xf-page-box .xf-page-body input:focus {
   border-color: #2d8cf0;
 }
-.jtable-page-ul div input::-webkit-inner-spin-button,
-.jtable-page-ul div input::-webkit-outer-spin-button {
+.xf-page-box .xf-page-body input::-webkit-inner-spin-button,
+.xf-page-box .xf-page-body input::-webkit-outer-spin-button {
   -webkit-appearance: none !important;
 }
-.jtable-page-ul div span {
+.xf-page-box .xf-page-body span {
   padding: 0 8px 0 2px;
   color: #666;
 }

@@ -9,22 +9,26 @@ function PageComponent(el, option) {
     this.refs = {};
     this._render = render.bind(this);
     this._pageEL = this._render(
-        "ul",
+        "div",
         {
-            class: "jtable-page-ul"
+            class: "xf-page-box"
         },
         [
-            this._render("li", {}, [
+            this._render("div", {
+                class: 'xf-page-left'
+            }, [
                 this._render(
                     "a",
                     {
-                        class: "jtable-page-pre",
+                        class: "xf-page-pre",
                         ref: "pre_btn"
                     },
                     this._type === 'default' ?'上一页':""
                 )
             ]),
-            this._render("div", {}, [
+            this._render("div", {
+                class: 'xf-page-body'
+            }, [
                 this._render("input", {
                     type: "number",
                     ref: "pager_input",
@@ -41,11 +45,13 @@ function PageComponent(el, option) {
                     }
                 }, this._totalPage)
             ]),
-            this._render("li", {}, [
+            this._render("div", {
+                class: 'xf-page-right'
+            }, [
                 this._render(
                     "a",
                     {
-                        class: "jtable-page-next",
+                        class: "xf-page-next",
                         ref: "next_btn"
                     },
                     this._type === 'default' ?'下一页':""
