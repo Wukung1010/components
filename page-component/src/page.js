@@ -1,4 +1,4 @@
-function PageComponent(el, option) {
+export default function PageComponent(el, option) {
     this._rootEl = el;
     this._option = option;
     this._currentPage = option.currentPage;
@@ -195,5 +195,3 @@ PageComponent.prototype = {
         this.checkBoundary();
     }
 };
-
-module.exports.default = module.exports = PageComponent;

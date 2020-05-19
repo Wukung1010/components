@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+</head>
+<body>
+  <button onclick="taggle()">taggle</button>
+  <div id= 'app' style="width: 400px; height: 300px; border: 1px solid; position: relative;">
+  </div>
+  <script>
+    const img = {
+      props: {
+        type: {
+          type: String
+        },
+        size: {
+          type: Number,
+          default: 10
+        },
+        color: {
+          type: String,
+          default: '#505050'
+        }
+      },
+      methods: {
+        getPoints() {
+          switch(this.type) {
+            case 'left' :
+              return `0,${this.size/2} ${this.size},0 ${this.size},${this.size}`;
+            case 'right' :
+              return `${this.size},${this.size/2} 0,0 0,${this.size}`;
+            case 'top' :
+              return `${this.size/2},0 0,${this.size} ${this.size},${this.size}`;
+            case 'bottom' :
+              return `0,0 ${this.size/2},${this.size} ${this.size},0`;
+          }
+        }
+      },
+      render(h) {
+        return h('svg', {
+          attrs: {
+            width: this.size,
+            height: this.size
+          },
+          style: {
+            display: 'block'
+          }
+        }, [h('polygon', {
+          attrs: {
+            points: this.getPoints(),
+            style: `fill: ${this.color}`
+          }
+        })]);
+      }
+    };
+    const scroll = {
+      data() {
+        return {
+          isDragging: false,
+          offsetLeft: 0,
+          offsetTop: 0,
+          mouseOffset: 0
+        }
+      },
+      props: {
+        size: {
+          default: 10
+        },
+        type: {
+          default: 'x',
+        },
+        pageSize: {
+          default: 3
+        },
+        totalSize: {
+          default: 31
+        }
+      },
+      computed: {
+        layoutMid() {
+          return {
+            margin: '0 auto',
+            position: 'relative',
+            top: '50%',
+            transform: 'translateY(-50%)'
+          }
+        },
+        box() {
+          return this.type === 'x' ? 
+          {
+            height: `${this.size}px`,
+            width: `100%`,
+            background: '#f1f1f1',
+            userSelect: 'none'
+          } : {
+            width: `${this.size}px`,
+            height: `100%`,
+            background: '#f1f1f1',
+            userSelect: 'none'
+          };
+        },
+        button() {
+          return {
+            height: `${this.size}px`,
+            width: `${this.size}px`,
+            float: this.type === 'x' ? 'left': 'none'
+          }
+        },
+        blockBox() {
+          const style = getComputedStyle(this.$el);
+          return this.type === 'x' ? 
+          {
+            height: `${this.size}px`,
+            width: `${
+              parseInt(style.width)
+              - (
+                (style.boxSizing === 'border-box') ? 
+                  (parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth))
+                  : 0
+                )
+              - this.size * 2
+            }px`,
+            float: 'left'
+          } : {
+            width: `${this.size}px`,
+            height: `${
+              parseInt(style.height)
+              - (
+                (style.boxSizing === 'border-box') ? 
+                  (parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth))
+                  : 0
+                )
+              - this.size * 2
+            }px`
+          };
+        },
+        block() {
+          return this.type === 'x' ? 
+          {
+            height: `${this.size}px`,
+            width: `${this.pageSize / this.totalSize * parseInt(this.blockBox.width)}px`,
+            background: '#c1c1c1',
+            position: 'relative'
+          } : {
+            width: `${this.size}px`,
+            height: `${this.pageSize / this.totalSize * parseInt(this.blockBox.height)}px`,
+            background: '#c1c1c1',
+            position: 'relative'
+          };
+        }
+      },
+      methods: {
+        beginDrag(e) {
+          const fn = () => {
+            this.isDragging = false;
+            document.body.removeEventListener('mousemove', drag);
+            document.body.removeEventListener('mouseup', fn);
+          };
+          const drag = (e) => {
+            if (this.isDragging) {
+              if (this.type === 'x') {
+                const left = e.x - this.mouseOffset - this.offsetLeft;
+                left < 0 && (left = 0);
+                const end = parseInt(this.blockBox.width) - parseInt(this.block.width);
+                left > end && (left = end);
+                this.$refs.block.style.left = `${left}px`;
+              } else {
+                const top = e.y - this.mouseOffset - this.offsetTop;
+                top < 0 && (top = 0);
+                const end = parseInt(this.blockBox.height) - parseInt(this.block.height);
+                top > end && (top = end);
+                this.$refs.block.style.top = `${top}px`;
+              }
+            }
+          }
+          document.body.addEventListener('mouseup', fn);
+          document.body.addEventListener('mousemove', drag);
+          this.isDragging = true;
+          this.mouseOffset = this.type === 'x' ? e.offsetX : e.offsetY;
+        }
+      },
+      mounted() {
+        let el = this.$el;
+        while(el) {
+          this.offsetLeft += el.offsetLeft;
+          this.offsetTop += el.offsetTop;
+          el = el.parentElement;
+        }
+      },
+      redner(h) {
+        return h('div', {
+          style: this.box
+        }, [h('div', {
+          style: this.button
+        }, [h(img, {
+          style: this.layoutMid,
+          props: {
+            size: 5,
+            type: this.type === 'x' ? 'left' : 'top'
+          }
+        })]), h('div', {
+          style: this.blockBox
+        }, [h('div', {
+          style: this.block,
+          on: {
+            mousedown: this.beginDrag
+          },
+          ref: 'block'
+        })]), h('div', {
+          style: this.button
+        }, [h(img, {
+          style: this.layoutMid,
+          props: {
+            size: 5,
+            type: this.type === 'x' ? 'right' : 'bottom'
+          }
+        })])])
+      }
+    }
+    function Scroll(el) {
+      const v = new Vue(scroll);
+  
+      v.$mount(el);
+      return v;
+    }
+
+    Scroll(document.getElementById('app'));
+
+    function taggle () {
+      if (v.type === 'x') {
+        v.type = 'y'
+      } else {
+        v.type = 'x'
+      }
+    }
+  </script>
+</body>
+</html>

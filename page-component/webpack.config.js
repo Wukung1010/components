@@ -13,6 +13,7 @@ module.exports = {
         path: path.join(__dirname, "dist"),
         filename: "page.js",
         library: "Page",
-        libraryTarget: "umd"
+        libraryTarget: "umd",
+        libraryExport: 'default'
     }
 };
